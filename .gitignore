@@ -1,5 +1,13 @@
 dist/
 .cache/
+## Local AI assistant config/state
+.codex/
+.aider/
+.cursor/
+.windsurf/
+.continue/
+.claude/
+.roo/
 mock-results/
 *.log
 *.src.rpm
