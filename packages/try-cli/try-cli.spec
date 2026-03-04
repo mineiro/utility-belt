@@ -1,11 +1,12 @@
 Name:           try-cli
 Version:        1.5.3
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        Ephemeral workspace manager with fuzzy directory search
 
 License:        MIT
 URL:            https://github.com/tobi/try-cli
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Patch0:         0001-fix-fish-init-wrapper-preserve-script-and-status.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
