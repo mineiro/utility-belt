@@ -8,6 +8,7 @@ URL:            https://github.com/sandwichfarm/keylight-control
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 # Upstream advertises GPL-3.0 but does not ship a license text in the release tarball.
 Source1:        https://www.gnu.org/licenses/gpl-3.0.txt#/%{name}-%{version}-GPL-3.0.txt
+Patch0:         0001-fix-fallback-event-loop-when-qasync-is-unavailable.patch
 
 BuildArch:      noarch
 
@@ -42,6 +43,66 @@ import keylight_controller as app
 
 app.__version__ = "%{version}"
 assert app.__version__ == "%{version}"
+PY
+QT_QPA_PLATFORM=offscreen PYTHONPATH=src python3 - <<'PY'
+import asyncio
+import builtins
+import sys
+
+import keylight_controller as app
+from PySide6.QtCore import QTimer
+
+real_import = builtins.__import__
+
+
+def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+    if name == "qasync":
+        raise ImportError("forced fallback for package test")
+    return real_import(name, globals, locals, fromlist, level)
+
+
+class DummySingleInstance:
+    def __init__(self):
+        self.socket = self
+
+    def is_running(self):
+        return False
+
+    def setblocking(self, _value):
+        return None
+
+    def accept(self):
+        raise BlockingIOError()
+
+    def cleanup(self):
+        return None
+
+
+class DummyController:
+    def show(self):
+        QTimer.singleShot(0, lambda: asyncio.get_event_loop().stop())
+
+    def raise_(self):
+        return None
+
+    def activateWindow(self):
+        return None
+
+    def quit_application(self):
+        return None
+
+
+builtins.__import__ = fake_import
+app.SingleInstance = DummySingleInstance
+app.KeyLightController = DummyController
+sys.argv = ["keylight-controller"]
+
+try:
+    app.main()
+finally:
+    builtins.__import__ = real_import
+
+print("fallback loop check: ok")
 PY
 
 %install

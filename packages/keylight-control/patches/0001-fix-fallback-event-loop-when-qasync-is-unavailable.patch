@@ -1,0 +1,25 @@
+diff --git a/src/keylight_controller.py b/src/keylight_controller.py
+index 0a792a8..a59b665 100644
+--- a/src/keylight_controller.py
++++ b/src/keylight_controller.py
+@@ -97,10 +97,20 @@ def main() -> None:
+     activation_timer.timeout.connect(check_for_activation)
+     activation_timer.start(100)
+ 
++    use_loop_context = hasattr(loop, "__enter__") and hasattr(loop, "__exit__")
++
+     try:
+-        with loop:
+-            loop.run_forever()
++        if use_loop_context:
++            with loop:
++                loop.run_forever()
++        else:
++            loop.run_forever()
+     finally:
++        if not use_loop_context:
++            try:
++                loop.close()
++            except Exception:
++                pass
+         single_instance.cleanup()
