@@ -50,7 +50,6 @@ import builtins
 import sys
 
 import keylight_controller as app
-from PySide6.QtCore import QTimer
 
 real_import = builtins.__import__
 
@@ -80,7 +79,8 @@ class DummySingleInstance:
 
 class DummyController:
     def show(self):
-        QTimer.singleShot(0, lambda: asyncio.get_event_loop().stop())
+        loop = asyncio.get_event_loop()
+        loop.call_soon(loop.stop)
 
     def raise_(self):
         return None
