@@ -8,7 +8,9 @@ Summary:        Pluggable Terraform linter
 License:        MPL-2.0 AND BUSL-1.1 AND BSD-3-Clause
 URL:            https://github.com/terraform-linters/tflint
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source1:        %{name}-%{version}-vendor.tar.xz
+# Placeholder URL for a locally generated vendor tarball; SRPM helpers create
+# the actual file before rpmbuild consumes it.
+Source1:        https://example.invalid/%{name}-%{version}-vendor.tar.xz#/%{name}-%{version}-vendor.tar.xz
 
 BuildRequires:  golang >= 1.25
 
