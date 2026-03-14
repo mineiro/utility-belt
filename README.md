@@ -1,6 +1,8 @@
 # utility-belt
 
-Monorepo for Fedora RPM packaging of DevSecOps, DevOps, cloud management, and cloud infrastructure tools.
+Monorepo for Fedora RPM packaging of useful tools and applications, from
+system utilities and terminal apps to developer, infrastructure, and other
+handy packages.
 
 This repository is intentionally structured as a packaging monorepo:
 

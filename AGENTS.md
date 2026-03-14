@@ -4,7 +4,10 @@ Session handoff notes for this repository.
 
 ## Intent
 
-`utility-belt` is a Fedora RPM packaging monorepo for DevSecOps/DevOps/cloud tooling not yet available (or not current enough) in Fedora repos.
+`utility-belt` is a Fedora RPM packaging monorepo for useful tools and
+applications not yet available (or not current enough) in Fedora repos,
+ranging from system utilities and terminal apps to developer and
+infrastructure tooling.
 
 ## Conventions
 
