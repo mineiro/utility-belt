@@ -1,6 +1,6 @@
 Name:           zathura
 Version:        2026.02.22
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        A lightweight document viewer
 
 License:        Zlib
