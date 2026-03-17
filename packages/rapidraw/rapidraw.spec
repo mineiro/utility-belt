@@ -61,6 +61,11 @@ find src-tauri/vendor -type f -exec chmod a-x {} +
 export CARGO_HOME="$PWD/.cargo-home"
 export CARGO_NET_OFFLINE=true
 export RUSTFLAGS="${RUSTFLAGS:-%{build_rustflags}}"
+# Upstream enables full LTO in the release profile, which can leave COPR
+# builders stuck in a very long final link step. Use Fedora's standard Rust
+# flags and let RPM handle stripping/debug info instead.
+export CARGO_PROFILE_RELEASE_LTO=false
+export CARGO_PROFILE_RELEASE_STRIP=none
 export ORT_STRATEGY=system
 export RAPIDRAW_SYSTEM_ORT_LIBDIR=%{_libdir}
 export npm_config_cache="$PWD/npm-cache"
