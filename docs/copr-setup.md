@@ -6,9 +6,11 @@ This repo is designed for COPR `SCM` package entries (one entry per package dire
 
 - COPR project name: `utility-belt`
 - Chroots:
+  - `fedora-42-x86_64`
   - `fedora-43-x86_64`
   - `fedora-44-x86_64`
   - `fedora-rawhide-x86_64`
+  - `fedora-42-aarch64`
   - `fedora-43-aarch64`
   - `fedora-44-aarch64`
   - `fedora-rawhide-aarch64`
@@ -42,5 +44,5 @@ copr-cli build-package <owner>/<project> --name <pkg>
 
 # aarch64-only rollout
 copr-cli build-package <owner>/<project> --name <pkg> \
-  -r fedora-43-aarch64 -r fedora-44-aarch64 -r fedora-rawhide-aarch64
+  -r fedora-42-aarch64 -r fedora-43-aarch64 -r fedora-44-aarch64 -r fedora-rawhide-aarch64
 ```

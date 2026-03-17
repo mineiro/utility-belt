@@ -10,8 +10,8 @@ Usage:
 
 Options:
   --after-build-id <id>      Start chain after existing build id
-  --x86_64-only              Use only fedora-43/44/rawhide x86_64 chroots
-  --aarch64-only             Use only fedora-43/44/rawhide aarch64 chroots
+  --x86_64-only              Use only fedora-42/43/44/rawhide x86_64 chroots
+  --aarch64-only             Use only fedora-42/43/44/rawhide aarch64 chroots
   --chroot <name>            Explicit chroot (repeatable)
   --background               Submit as background jobs
   -h, --help                 Show help
@@ -37,12 +37,12 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --x86_64-only)
-      chroots=(fedora-43-x86_64 fedora-44-x86_64 fedora-rawhide-x86_64)
+      chroots=(fedora-42-x86_64 fedora-43-x86_64 fedora-44-x86_64 fedora-rawhide-x86_64)
       explicit_chroots=1
       shift
       ;;
     --aarch64-only)
-      chroots=(fedora-43-aarch64 fedora-44-aarch64 fedora-rawhide-aarch64)
+      chroots=(fedora-42-aarch64 fedora-43-aarch64 fedora-44-aarch64 fedora-rawhide-aarch64)
       explicit_chroots=1
       shift
       ;;
@@ -84,8 +84,8 @@ done
 
 if [[ ${explicit_chroots} -eq 0 ]]; then
   chroots=(
-    fedora-43-x86_64 fedora-44-x86_64 fedora-rawhide-x86_64
-    fedora-43-aarch64 fedora-44-aarch64 fedora-rawhide-aarch64
+    fedora-42-x86_64 fedora-43-x86_64 fedora-44-x86_64 fedora-rawhide-x86_64
+    fedora-42-aarch64 fedora-43-aarch64 fedora-44-aarch64 fedora-rawhide-aarch64
   )
 fi
 

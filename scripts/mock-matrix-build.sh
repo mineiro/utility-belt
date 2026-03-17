@@ -13,7 +13,7 @@ Usage:
 
 Options:
   --all-packages              Build every package under packages/
-  --release <43|44|rawhide>  Target Fedora release (repeatable)
+  --release <42|43|44|rawhide>  Target Fedora release (repeatable)
   --arch <x86_64|aarch64>    Target architecture (repeatable)
   --x86_64-only              Shortcut for --arch x86_64
   --aarch64-only             Shortcut for --arch aarch64
@@ -32,7 +32,7 @@ log() { printf '[matrix] %s\n' "$*"; }
 die() { printf '[matrix] ERROR: %s\n' "$*" >&2; exit 1; }
 require_cmd() { command -v "$1" >/dev/null 2>&1 || die "Missing required command: $1"; }
 
-is_valid_release() { case "$1" in 43|44|rawhide) return 0;; *) return 1;; esac; }
+is_valid_release() { case "$1" in 42|43|44|rawhide) return 0;; *) return 1;; esac; }
 is_valid_arch() { case "$1" in x86_64|aarch64) return 0;; *) return 1;; esac; }
 require_value() { local opt="$1" val="${2:-}"; [[ -n "$val" ]] || die "${opt} requires a value"; }
 
@@ -83,7 +83,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ ${release_set} -eq 0 ]]; then releases=(43 44 rawhide); fi
+if [[ ${release_set} -eq 0 ]]; then releases=(42 43 44 rawhide); fi
 if [[ ${arch_set} -eq 0 ]]; then arches=(x86_64 aarch64); fi
 
 require_cmd make
