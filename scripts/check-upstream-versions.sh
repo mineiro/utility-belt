@@ -94,14 +94,53 @@ fetch_latest_tag_from_git() {
     | tail -n1
 }
 
+fetch_latest_version_from_release_page() {
+  local release_url="$1" package_name="$2" html escaped_name archive_re
+  [[ -n "${release_url}" ]] || return 0
+
+  html="$(curl -fsSL "${release_url}" 2>/dev/null || true)"
+  [[ -n "${html}" ]] || return 0
+
+  escaped_name="$(printf '%s\n' "${package_name}" | sed -E 's/[][(){}.^$+*?|\\/]/\\&/g')"
+  archive_re='(\.tar\.(gz|bz2|xz)|\.tgz|\.tbz2|\.zip)'
+
+  printf '%s' "${html}" \
+    | grep -Eo "${escaped_name}-[0-9][0-9A-Za-z._-]*${archive_re}" 2>/dev/null \
+    | sed -E "s/^${escaped_name}-//; s/${archive_re}\$//" \
+    | sort -Vu \
+    | tail -n1 || true
+}
+
+normalize_upstream_version() {
+  local upstream_ref="$1" normalized
+  normalized="$(
+    printf '%s' "${upstream_ref}" \
+      | grep -Eo '[0-9]+(\.[0-9A-Za-z]+){1,3}([._-][0-9A-Za-z.-]+)?' 2>/dev/null \
+      | sort -Vu \
+      | tail -n1 || true
+  )"
+
+  if [[ -n "${normalized}" ]]; then
+    printf '%s\n' "${normalized}"
+  else
+    printf '%s\n' "${upstream_ref#v}"
+  fi
+}
+
 printf '%-28s %-24s %-18s %-10s %s\n' "PACKAGE" "LOCAL" "UPSTREAM" "STATUS" "UPSTREAM_GIT"
 
 for envf in "${env_files[@]}"; do
   pkg_dir="$(dirname "${envf}")"
   pkg_name="$(basename "${pkg_dir}")"
 
+  package_name="$(awk -F= '/^PACKAGE_NAME=/{print $2}' "${envf}")"
   spec_file="$(awk -F= '/^SPEC_FILE=/{print $2}' "${envf}")"
   upstream_git="$(awk -F= '/^UPSTREAM_GIT=/{print $2}' "${envf}")"
+  upstream_releases="$(awk -F= '/^UPSTREAM_RELEASES=/{print $2}' "${envf}")"
+
+  if [[ -z "${package_name}" ]]; then
+    package_name="${pkg_name}"
+  fi
 
   if [[ -z "${spec_file}" || -z "${upstream_git}" ]]; then
     if [[ ${changed_only} -eq 0 ]]; then
@@ -128,10 +167,14 @@ for envf in "${env_files[@]}"; do
   fi
 
   if [[ -z "${upstream_tag}" ]]; then
+    upstream_tag="$(fetch_latest_version_from_release_page "${upstream_releases:-}" "${package_name}")"
+  fi
+
+  if [[ -z "${upstream_tag}" ]]; then
     upstream_tag="$(fetch_latest_tag_from_git "${upstream_git}" || true)"
   fi
 
-  upstream_version="${upstream_tag#v}"
+  upstream_version="$(normalize_upstream_version "${upstream_tag}")"
   local_base="${local_version%%^git*}"
 
   if [[ -z "${upstream_tag}" ]]; then
