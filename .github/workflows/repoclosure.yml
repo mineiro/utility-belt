@@ -11,12 +11,74 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fedora_version:
-          - "43"
-          - "44"
-          - rawhide
+        include:
+          - fedora_version: "43"
+            fedora_image: "43"
+            copr_releasever: "43"
+            fedora_repos: |
+              [fedora]
+              name=Fedora 43 - $basearch
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/$basearch/os/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates]
+              name=Fedora 43 - $basearch - Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates-testing]
+              name=Fedora 43 - $basearch - Test Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/43/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+          - fedora_version: "44"
+            fedora_image: "44"
+            copr_releasever: "44"
+            fedora_repos: |
+              [fedora]
+              name=Fedora 44 - $basearch
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/44/Everything/$basearch/os/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates]
+              name=Fedora 44 - $basearch - Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/44/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates-testing]
+              name=Fedora 44 - $basearch - Test Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/44/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+          - fedora_version: rawhide
+            fedora_image: rawhide
+            copr_releasever: rawhide
+            fedora_repos: |
+              [fedora]
+              name=Fedora Rawhide - Developmental packages - $basearch
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/os/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
     container:
-      image: registry.fedoraproject.org/fedora:${{ matrix.fedora_version }}
+      image: registry.fedoraproject.org/fedora:${{ matrix.fedora_image }}
     env:
       COPR_OWNER: ${{ vars.COPR_OWNER }}
       COPR_PROJECT: ${{ vars.COPR_PROJECT }}
@@ -26,12 +88,18 @@ jobs:
           test -n "${COPR_OWNER}" || { echo "Set repository variable COPR_OWNER"; exit 1; }
           test -n "${COPR_PROJECT}" || { echo "Set repository variable COPR_PROJECT"; exit 1; }
 
-      - name: Add COPR repo file
+      - name: Add Repo Files
         run: |
+          rm -f /etc/yum.repos.d/*.repo
+
+          cat > /etc/yum.repos.d/fedora.repo <<EOF_FEDORA
+          ${{ matrix.fedora_repos }}
+          EOF_FEDORA
+
           cat > /etc/yum.repos.d/copr.repo <<EOF_REPO
           [copr:${COPR_OWNER}:${COPR_PROJECT}]
           name=COPR ${COPR_OWNER}/${COPR_PROJECT}
-          baseurl=https://download.copr.fedorainfracloud.org/results/${COPR_OWNER}/${COPR_PROJECT}/fedora-\$releasever-\$basearch/
+          baseurl=https://download.copr.fedorainfracloud.org/results/${COPR_OWNER}/${COPR_PROJECT}/fedora-${{ matrix.copr_releasever }}-\$basearch/
           type=rpm-md
           skip_if_unavailable=True
           gpgcheck=1
