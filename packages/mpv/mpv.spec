@@ -1,6 +1,6 @@
 Name:           mpv
 Version:        0.41.0
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        Movie player playing most video formats and DVDs
 
 # Disable X11 for RHEL 10+, matching Fedora's current dist-git behavior.
@@ -144,7 +144,11 @@ This package contains the dynamic library libmpv, which provides access to Mpv.
 Summary:        Development package for libmpv
 Provides:       %{name}-libs-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      %{name}-libs-devel < %{?epoch:%{epoch}:}%{version}-%{release}
+%if 0%{?fedora} >= 44
+Requires:       %{name}-libs%{?_isa}
+%else
 Requires:       %{name}-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+%endif
 
 %description devel
 This package contains development header files and libraries for Mpv.
