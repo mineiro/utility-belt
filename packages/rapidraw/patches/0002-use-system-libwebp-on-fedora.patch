@@ -1,0 +1,37 @@
+diff --git a/src-tauri/vendor/libwebp-sys/Cargo.toml b/src-tauri/vendor/libwebp-sys/Cargo.toml
+--- a/src-tauri/vendor/libwebp-sys/Cargo.toml
++++ b/src-tauri/vendor/libwebp-sys/Cargo.toml
+@@ -45,6 +45,9 @@
+ [build-dependencies.cc]
+ version = "1"
+ 
++[build-dependencies.pkg-config]
++version = "0.3"
++
+ [build-dependencies.glob]
+ version = "0.3"
+ 
+diff --git a/src-tauri/vendor/libwebp-sys/build.rs b/src-tauri/vendor/libwebp-sys/build.rs
+--- a/src-tauri/vendor/libwebp-sys/build.rs
++++ b/src-tauri/vendor/libwebp-sys/build.rs
+@@ -1,10 +1,20 @@
+ extern crate cc;
+ extern crate glob;
++extern crate pkg_config;
+ 
+ use std::env;
+ use std::path::PathBuf;
+ 
+ fn main() {
++    if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("linux") {
++        for lib in ["libwebp", "libwebpmux", "libwebpdemux", "libsharpyuv"] {
++            pkg_config::Config::new()
++                .probe(lib)
++                .unwrap_or_else(|err| panic!("failed to locate system {lib} via pkg-config: {err}"));
++        }
++        return;
++    }
++
+     let manifest_dir =
+         PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR"));
+     let vendor = manifest_dir.join("vendor");

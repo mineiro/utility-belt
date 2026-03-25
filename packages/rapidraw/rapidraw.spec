@@ -1,5 +1,5 @@
 Name:           rapidraw
-Version:        1.5.1
+Version:        1.5.2
 Release:        %autorelease
 Summary:        GPU-accelerated RAW image editor
 %global rawler_commit 718400a1d84b53c7f12765094d2e4b75f64ca975
@@ -13,6 +13,7 @@ Source1:        https://example.invalid/%{name}-%{version}-vendor.tar.xz#/%{name
 Source2:        https://example.invalid/%{name}-%{version}-node-cache.tar.xz#/%{name}-%{version}-node-cache.tar.xz
 Source3:        https://github.com/CyberTimon/RapidRAW-DngLab/archive/%{rawler_commit}.tar.gz#/RapidRAW-DngLab-%{rawler_commit}.tar.gz
 Patch0:         0001-use-system-onnxruntime-on-fedora.patch
+Patch1:         0002-use-system-libwebp-on-fedora.patch
 
 BuildRequires:  cargo
 BuildRequires:  desktop-file-utils
@@ -26,7 +27,11 @@ BuildRequires:  nodejs >= 22
 BuildRequires:  /usr/bin/npm
 BuildRequires:  openssl-devel
 BuildRequires:  pkgconf-pkg-config
-BuildRequires:  rust >= 1.92
+BuildRequires:  pkgconfig(libsharpyuv)
+BuildRequires:  pkgconfig(libwebp)
+BuildRequires:  pkgconfig(libwebpdemux)
+BuildRequires:  pkgconfig(libwebpmux)
+BuildRequires:  rust >= 1.94
 BuildRequires:  webkit2gtk4.1-devel
 
 Requires:       onnxruntime%{?_isa}
@@ -40,7 +45,7 @@ rendering, AI-assisted masking and tagging, and support for a wide range of RAW
 camera formats.
 
 %prep
-%autosetup -n RapidRAW-%{version} -p1
+%autosetup -n RapidRAW-%{version} -N
 rm -rf src-tauri/rawler
 mkdir -p src-tauri/rawler
 tar -xzf %{SOURCE3} --strip-components=1 -C src-tauri/rawler
@@ -54,6 +59,12 @@ directory = "vendor"
 EOF
 tar -C src-tauri -xJf %{SOURCE1}
 tar -xJf %{SOURCE2}
+%autopatch -p1
+# Keep Cargo's vendor integrity metadata in sync with the patched libwebp-sys crate.
+sed -i \
+  -e 's#"Cargo.toml":"[^"]*"#"Cargo.toml":"c5efb6ecb15c52f2fc20418cb5b7aedad2f22185fc5afc6eac3e94ca3f286dd3"#' \
+  -e 's#"build.rs":"[^"]*"#"build.rs":"17444c540ff8fdbb86ac714be45bb4152086e85484f4930dc17b0ffb9755b31f"#' \
+  src-tauri/vendor/libwebp-sys/.cargo-checksum.json
 find src-tauri/vendor -type f -exec chmod a-x {} +
 
 %build
