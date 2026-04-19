@@ -57,7 +57,8 @@ srpm: prepare
 		fi; \
 		vendor_name="$$(rpmspec -P "./$(specfile)" | awk '/^Source1:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
 		src0_name="$$(rpmspec -P "./$(specfile)" | awk '/^Source0:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
-		submodule_name="$$(rpmspec -P "./$(specfile)" | awk '/^Source3:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
+		submodule_url="$$(rpmspec -P "./$(specfile)" | awk '/^Source3:[[:space:]]*/ { print $$2; exit }')"; \
+		submodule_name="$${submodule_url##*/}"; \
 		tmpdir="$$(mktemp -d)"; \
 		rpm_sourcedir="$$(rpm --eval '%{_sourcedir}' 2>/dev/null || true)"; \
 		src0_path="./$$src0_name"; \
