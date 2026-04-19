@@ -1,8 +1,7 @@
 Name:           rapidraw
-Version:        1.5.2
+Version:        1.5.3
 Release:        %autorelease
 Summary:        GPU-accelerated RAW image editor
-%global rawler_commit 718400a1d84b53c7f12765094d2e4b75f64ca975
 
 License:        AGPL-3.0-only
 URL:            https://github.com/CyberTimon/RapidRAW
@@ -11,7 +10,6 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.
 # the actual files before rpmbuild consumes them.
 Source1:        https://example.invalid/%{name}-%{version}-vendor.tar.xz#/%{name}-%{version}-vendor.tar.xz
 Source2:        https://example.invalid/%{name}-%{version}-node-cache.tar.xz#/%{name}-%{version}-node-cache.tar.xz
-Source3:        https://github.com/CyberTimon/RapidRAW-DngLab/archive/%{rawler_commit}.tar.gz#/RapidRAW-DngLab-%{rawler_commit}.tar.gz
 Patch0:         0001-use-system-onnxruntime-on-fedora.patch
 Patch1:         0002-use-system-libwebp-on-fedora.patch
 
@@ -46,12 +44,13 @@ camera formats.
 
 %prep
 %autosetup -n RapidRAW-%{version} -N
-rm -rf src-tauri/rawler
-mkdir -p src-tauri/rawler
-tar -xzf %{SOURCE3} --strip-components=1 -C src-tauri/rawler
 mkdir -p src-tauri/.cargo
 cat > src-tauri/.cargo/config.toml <<'EOF'
 [source.crates-io]
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/CyberTimon/RapidRAW-DngLab.git"]
+git = "https://github.com/CyberTimon/RapidRAW-DngLab.git"
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
@@ -60,6 +59,9 @@ EOF
 tar -C src-tauri -xJf %{SOURCE1}
 tar -xJf %{SOURCE2}
 %autopatch -p1
+# Keep Cargo.lock in sync with the patched libwebp-sys build dependency.
+sed -i '/^name = "libwebp-sys"$/,/^\]$/ { / "glob",/a\ "pkg-config",
+}' src-tauri/Cargo.lock
 # Keep Cargo's vendor integrity metadata in sync with the patched libwebp-sys crate.
 sed -i \
   -e 's#"Cargo.toml":"[^"]*"#"Cargo.toml":"c5efb6ecb15c52f2fc20418cb5b7aedad2f22185fc5afc6eac3e94ca3f286dd3"#' \

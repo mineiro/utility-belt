@@ -6,6 +6,9 @@
    - `./scripts/check-upstream-versions.sh --changed-only`
    - `./scripts/check-upstream-versions.sh --package <name>`
 2. Update package spec (`Version`, `Source`, deps, patches)
+   - If upstream now requires a newer Fedora toolchain, set
+     `SUPPORTED_FEDORA_RELEASES` in `package.env` and verify older chroots are
+     intentionally skipped.
 3. Build SRPM:
    - `make srpm PACKAGE=<name>`
 4. Validate with `mock` (at least Fedora 43/44 x86_64)

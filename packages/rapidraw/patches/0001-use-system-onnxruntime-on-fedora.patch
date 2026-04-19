@@ -28,9 +28,9 @@ Subject: [PATCH] use system onnxruntime on Fedora
      let (download_filename, lib_name, expected_hash) =
          match (target_os.as_str(), target_arch.as_str()) {
              ("windows", "x86_64") => (
---- a/src-tauri/src/main.rs
-+++ b/src-tauri/src/main.rs
-@@ -3569,6 +3569,47 @@
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -4330,6 +4330,47 @@ fn frontend_ready(
      Ok(())
  }
  
@@ -75,10 +75,11 @@ Subject: [PATCH] use system onnxruntime on Fedora
 +    None
 +}
 +
- fn main() {
+ #[cfg_attr(mobile, tauri::mobile_entry_point)]
+ pub fn run() {
      tauri::Builder::default()
          .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
-@@ -3637,9 +3678,25 @@
+@@ -4412,9 +4453,25 @@ pub fn run() {
                      #[cfg(target_os = "linux")] { "libonnxruntime.so" }
                      #[cfg(target_os = "macos")] { "libonnxruntime.dylib" }
                  };

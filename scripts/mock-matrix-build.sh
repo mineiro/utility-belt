@@ -2,6 +2,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "${repo_root}/scripts/package-release-support.sh"
 
 usage() {
   cat <<'USAGE'
@@ -109,8 +110,22 @@ done
 
 mkdir -p "${srpm_out}" "${result_root}"
 
+package_selected_for_releases() {
+  local pkg="$1" rel
+  for rel in "${releases[@]}"; do
+    if package_supports_fedora_release "${pkg}" "${rel}"; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 if [[ ${skip_srpm} -eq 0 ]]; then
   for pkg in "${packages[@]}"; do
+    if ! package_selected_for_releases "${pkg}"; then
+      log "Skipping SRPM: ${pkg} (not enabled for selected Fedora releases)"
+      continue
+    fi
     log "Building SRPM: ${pkg}"
     make -C "${repo_root}" srpm PACKAGE="${pkg}" OUTDIR="${srpm_out}"
   done
@@ -118,8 +133,11 @@ else
   log "Skipping SRPM build phase"
 fi
 
-declare -a srpms=()
+declare -A srpm_by_pkg=()
 for pkg in "${packages[@]}"; do
+  if ! package_selected_for_releases "${pkg}"; then
+    continue
+  fi
   latest_srpm="$(
     find "${srpm_out}" -maxdepth 1 -type f -name "${pkg}-*.src.rpm" -printf '%T@ %p\n' 2>/dev/null \
       | awk -v pkg="${pkg}" '
@@ -138,7 +156,7 @@ for pkg in "${packages[@]}"; do
       | cut -d' ' -f2-
   )"
   [[ -n "${latest_srpm}" ]] || die "No SRPM found for ${pkg} under ${srpm_out}"
-  srpms+=("${latest_srpm}")
+  srpm_by_pkg["${pkg}"]="${latest_srpm}"
 done
 
 declare -a chroots=()
@@ -160,6 +178,24 @@ for cfg in "${chroots[@]}"; do
 
   log "Running ${mode} build in ${cfg}"
 
+  cfg_packages=()
+  cfg_srpms=()
+  for pkg in "${packages[@]}"; do
+    if package_supports_chroot "${pkg}" "${cfg}"; then
+      [[ -n "${srpm_by_pkg[$pkg]:-}" ]] || die "No SRPM selected for ${pkg} in ${cfg}"
+      cfg_packages+=("${pkg}")
+      cfg_srpms+=("${srpm_by_pkg[$pkg]}")
+    else
+      log "Skipping ${pkg} in ${cfg} (unsupported by package.env)"
+    fi
+  done
+
+  if [[ ${#cfg_srpms[@]} -eq 0 ]]; then
+    chroot_status["${cfg}"]="skipped"
+    log "Skipping ${cfg}: no selected packages support this chroot"
+    continue
+  fi
+
   extra_repo_args=()
   for repo in "${extra_repos[@]}"; do
     extra_repo_args+=(--addrepo "$repo")
@@ -167,7 +203,7 @@ for cfg in "${chroots[@]}"; do
 
   if [[ "${mode}" == "chain" ]]; then
     mkdir -p "${run_dir}/localrepo"
-    if mock --chain -r "${cfg}" --localrepo "${run_dir}/localrepo" "${extra_repo_args[@]}" "${mock_args[@]}" "${srpms[@]}"; then
+    if mock --chain -r "${cfg}" --localrepo "${run_dir}/localrepo" "${extra_repo_args[@]}" "${mock_args[@]}" "${cfg_srpms[@]}"; then
       chroot_status["${cfg}"]="ok"
     else
       chroot_status["${cfg}"]="fail"
@@ -176,9 +212,9 @@ for cfg in "${chroots[@]}"; do
     fi
   else
     rebuild_failed=0
-    for i in "${!packages[@]}"; do
-      pkg="${packages[$i]}"
-      srpm="${srpms[$i]}"
+    for i in "${!cfg_packages[@]}"; do
+      pkg="${cfg_packages[$i]}"
+      srpm="${cfg_srpms[$i]}"
       pkg_result_dir="${run_dir}/${pkg}"
       mkdir -p "${pkg_result_dir}"
 

@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           tflint
-Version:        0.61.0
+Version:        0.62.0
 Release:        %autorelease
 Summary:        Pluggable Terraform linter
 
@@ -12,7 +12,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.
 # the actual file before rpmbuild consumes it.
 Source1:        https://example.invalid/%{name}-%{version}-vendor.tar.xz#/%{name}-%{version}-vendor.tar.xz
 
-BuildRequires:  golang >= 1.25
+BuildRequires:  golang >= 1.26.2
 
 %description
 TFLint is a pluggable linter for Terraform code. It can validate Terraform

@@ -3,6 +3,7 @@ SHELL := /bin/bash
 SPEC ?= $(firstword $(wildcard *.spec))
 OUTDIR ?= $(CURDIR)/../../dist/srpm
 SOURCEDIR ?= $(CURDIR)/sources
+GO_VENDOR_TOOLCHAIN ?= auto
 
 .PHONY: srpm vendor
 
@@ -21,7 +22,8 @@ srpm:
 		"$(SPEC)"
 
 vendor:
-	@vendor_name="$$(rpmspec -P "$(SPEC)" | awk '/^Source1:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
+	@set -e; \
+	vendor_name="$$(rpmspec -P "$(SPEC)" | awk '/^Source1:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
 	src0_name="$$(rpmspec -P "$(SPEC)" | awk '/^Source0:[[:space:]]*/ { print $$2; exit }' | xargs basename)"; \
 	if [ -z "$$vendor_name" ]; then \
 		echo "No Source1 vendor tarball defined in $(SPEC), skipping vendor generation"; \
@@ -35,7 +37,7 @@ vendor:
 	tar -xf "$$src0_path" -C "$$tmpdir"; \
 	srcdir="$$(find "$$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -1)"; \
 	[ -n "$$srcdir" ] || { echo "Failed to locate extracted source dir for vendoring"; exit 1; }; \
-	( cd "$$srcdir" && GO111MODULE=on go mod vendor ); \
+	( cd "$$srcdir" && GO111MODULE=on GOTOOLCHAIN="$(GO_VENDOR_TOOLCHAIN)" go mod vendor ); \
 	tar -cJf "$(SOURCEDIR)/$$vendor_name" -C "$$srcdir" vendor; \
 	rm -rf "$$tmpdir"; \
 	trap - EXIT; \

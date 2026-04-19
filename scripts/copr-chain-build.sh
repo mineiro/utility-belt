@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "${repo_root}/scripts/package-release-support.sh"
+
 usage() {
   cat <<'USAGE'
 Queue ordered COPR builds using --after-build-id chaining.
@@ -89,16 +92,31 @@ if [[ ${explicit_chroots} -eq 0 ]]; then
   )
 fi
 
-build_opts=()
-for c in "${chroots[@]}"; do
-  build_opts+=( -r "$c" )
-done
-if [[ ${background} -eq 1 ]]; then
-  build_opts+=( --background )
-fi
-
 prev="${after_build_id}"
+submitted=0
 for pkg in "${packages[@]}"; do
+  filtered_chroots=()
+  for c in "${chroots[@]}"; do
+    if package_supports_chroot "${pkg}" "${c}"; then
+      filtered_chroots+=("${c}")
+    else
+      printf 'Skipping %s in %s (unsupported by package.env)\n' "${pkg}" "${c}"
+    fi
+  done
+
+  if [[ ${#filtered_chroots[@]} -eq 0 ]]; then
+    printf 'Skipping %s: no selected chroots support this package\n' "${pkg}"
+    continue
+  fi
+
+  build_opts=()
+  for c in "${filtered_chroots[@]}"; do
+    build_opts+=( -r "$c" )
+  done
+  if [[ ${background} -eq 1 ]]; then
+    build_opts+=( --background )
+  fi
+
   cmd=(copr-cli build-package "$project" --name "$pkg" --nowait)
   cmd+=("${build_opts[@]}")
   if [[ -n "${prev}" ]]; then
@@ -110,6 +128,11 @@ for pkg in "${packages[@]}"; do
   [[ -n "$id" ]] || { echo "Failed to parse build id for $pkg"; printf '%s\n' "$out"; exit 1; }
   printf '%s -> %s\n' "$pkg" "$id"
   prev="$id"
+  submitted=1
 done
 
-printf 'Final build id: %s\n' "$prev"
+if [[ ${submitted} -eq 1 ]]; then
+  printf 'Final build id: %s\n' "$prev"
+else
+  printf 'No builds submitted\n'
+fi

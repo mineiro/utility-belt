@@ -28,6 +28,17 @@ For each package directory:
 
 The shared `.copr/Makefile` handles SRPM generation inside COPR.
 
+Package-specific release limits can be declared in `package.env`:
+
+```bash
+SUPPORTED_FEDORA_RELEASES=rawhide
+SUPPORTED_FEDORA_RELEASES="44 rawhide"
+```
+
+An empty value means all configured Fedora releases. The helper scripts filter
+COPR and mock chroots from this metadata, so forward-only packages can move
+ahead without breaking older Fedora targets.
+
 ## Recommended sequence
 
 1. Create package entry

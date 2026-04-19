@@ -2,6 +2,7 @@
 
 # COPR passes `spec` and `outdir` when using SCM + make_srpm.
 specfile = $(notdir $(spec))
+GO_VENDOR_TOOLCHAIN ?= auto
 
 define is_rust_vendor_spec
 	[ -n "$(spec)" ] && rpmspec -P "./$(specfile)" | grep -q '^Source1:' && \
@@ -149,7 +150,7 @@ srpm: prepare
 		tar -xf "$$src0_path" -C "$$tmpdir"; \
 		srcdir="$$(find "$$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -1)"; \
 		[ -n "$$srcdir" ] || { echo "Failed to locate extracted source dir for vendoring"; exit 1; }; \
-		( cd "$$srcdir" && GO111MODULE=on go mod vendor ); \
+		( cd "$$srcdir" && GO111MODULE=on GOTOOLCHAIN="$(GO_VENDOR_TOOLCHAIN)" go mod vendor ); \
 		tar -cJf "./$$vendor_name" -C "$$srcdir" vendor; \
 		rm -rf "$$tmpdir"; \
 		trap - EXIT; \
