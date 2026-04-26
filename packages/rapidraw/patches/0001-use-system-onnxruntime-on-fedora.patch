@@ -6,10 +6,10 @@ Subject: [PATCH] use system onnxruntime on Fedora
 ---
 --- a/src-tauri/build.rs
 +++ b/src-tauri/build.rs
-@@ -66,6 +66,21 @@
+@@ -65,6 +65,21 @@ fn main() {
      let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
      let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
- 
+
 +    println!("cargo:rerun-if-env-changed=ORT_STRATEGY");
 +    println!("cargo:rerun-if-env-changed=RAPIDRAW_SYSTEM_ORT_LIBDIR");
 +
@@ -25,12 +25,12 @@ Subject: [PATCH] use system onnxruntime on Fedora
 +        return;
 +    }
 +
+     let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+
      let (download_filename, lib_name, expected_hash) =
-         match (target_os.as_str(), target_arch.as_str()) {
-             ("windows", "x86_64") => (
 --- a/src-tauri/src/lib.rs
 +++ b/src-tauri/src/lib.rs
-@@ -4330,6 +4330,47 @@ fn frontend_ready(
+@@ -4804,6 +4804,47 @@ fn frontend_ready(
      Ok(())
  }
  
@@ -77,34 +77,32 @@ Subject: [PATCH] use system onnxruntime on Fedora
 +
  #[cfg_attr(mobile, tauri::mobile_entry_point)]
  pub fn run() {
-     tauri::Builder::default()
-         .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
-@@ -4412,9 +4453,25 @@ pub fn run() {
-                     #[cfg(target_os = "linux")] { "libonnxruntime.so" }
-                     #[cfg(target_os = "macos")] { "libonnxruntime.dylib" }
-                 };
--                let ort_library_path = resource_path.join(ort_library_name);
--                std::env::set_var("ORT_DYLIB_PATH", &ort_library_path);
--                println!("Set ORT_DYLIB_PATH to: {}", ort_library_path.display());
-+                if std::env::var_os("ORT_DYLIB_PATH").is_none() {
-+                    let bundled_ort_library_path = resource_path.join(ort_library_name);
-+                    let ort_library_path = if bundled_ort_library_path.exists() {
-+                        Some(bundled_ort_library_path)
-+                    } else {
-+                        #[cfg(target_os = "linux")]
-+                        {
-+                            resolve_system_ort_library()
+     let mut builder = tauri::Builder::default();
+@@ -4918,9 +4959,25 @@ pub fn run() {
+                         #[cfg(not(any(windows, target_os = "linux", target_os = "macos")))]
+                         { "libonnxruntime.so" }
+                     };
+-                    let ort_library_path = resource_path.join(ort_library_name);
+-                    std::env::set_var("ORT_DYLIB_PATH", &ort_library_path);
+-                    println!("Set ORT_DYLIB_PATH to: {}", ort_library_path.display());
++                    if std::env::var_os("ORT_DYLIB_PATH").is_none() {
++                        let bundled_ort_library_path = resource_path.join(ort_library_name);
++                        let ort_library_path = if bundled_ort_library_path.exists() {
++                            Some(bundled_ort_library_path)
++                        } else {
++                            #[cfg(target_os = "linux")]
++                            {
++                                resolve_system_ort_library()
++                            }
++                            #[cfg(not(target_os = "linux"))]
++                            {
++                                None
++                            }
++                        };
++                        if let Some(ort_library_path) = ort_library_path {
++                            std::env::set_var("ORT_DYLIB_PATH", &ort_library_path);
++                            println!("Set ORT_DYLIB_PATH to: {}", ort_library_path.display());
 +                        }
-+                        #[cfg(not(target_os = "linux"))]
-+                        {
-+                            None
-+                        }
-+                    };
-+                    if let Some(ort_library_path) = ort_library_path {
-+                        std::env::set_var("ORT_DYLIB_PATH", &ort_library_path);
-+                        println!("Set ORT_DYLIB_PATH to: {}", ort_library_path.display());
 +                    }
-+                }
+                 }
              }
- 
-             setup_logging(&app_handle);
