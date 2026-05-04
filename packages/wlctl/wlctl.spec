@@ -1,5 +1,5 @@
 Name:           wlctl
-Version:        0.1.5
+Version:        0.1.6
 Release:        %autorelease
 Summary:        Terminal UI for managing Wi-Fi with NetworkManager
 
@@ -24,20 +24,20 @@ Requires:       NetworkManager
 
 # Vendored Rust crates are used to keep SRPM and COPR builds reproducible while
 # the dependency stack is not yet packaged in Fedora.
-Provides:       bundled(crate(anyhow)) = 1.0.100
-Provides:       bundled(crate(chrono)) = 0.4.42
-Provides:       bundled(crate(clap)) = 4.5.53
+Provides:       bundled(crate(anyhow)) = 1.0.102
+Provides:       bundled(crate(chrono)) = 0.4.44
+Provides:       bundled(crate(clap)) = 4.6.1
 Provides:       bundled(crate(crossterm)) = 0.29.0
 Provides:       bundled(crate(dirs)) = 6.0.0
-Provides:       bundled(crate(env_logger)) = 0.11.8
-Provides:       bundled(crate(futures)) = 0.3.31
+Provides:       bundled(crate(env_logger)) = 0.11.10
+Provides:       bundled(crate(futures)) = 0.3.32
 Provides:       bundled(crate(qrcode)) = 0.14.1
 Provides:       bundled(crate(ratatui)) = 0.29.0
-Provides:       bundled(crate(tokio)) = 1.48.0
-Provides:       bundled(crate(toml)) = 0.9.8
+Provides:       bundled(crate(tokio)) = 1.52.1
+Provides:       bundled(crate(toml)) = 1.1.2+spec-1.1.0
 Provides:       bundled(crate(tui-input)) = 0.14.0
 Provides:       bundled(crate(tui-qrcode)) = 0.1.3
-Provides:       bundled(crate(zbus)) = 5.12.0
+Provides:       bundled(crate(zbus)) = 5.15.0
 
 %description
 wlctl is a text user interface for managing Wi-Fi on Linux through

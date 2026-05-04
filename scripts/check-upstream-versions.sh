@@ -94,6 +94,58 @@ fetch_latest_tag_from_git() {
     | tail -n1
 }
 
+fetch_git_head() {
+  local upstream_git="$1"
+  git ls-remote "${upstream_git}" HEAD 2>/dev/null | awk '{print $1; exit}'
+}
+
+read_spec_global() {
+  local spec_path="$1" name="$2"
+  awk -v wanted="${name}" '
+    /^(%global|%define)[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]+/ && $2 == wanted {
+      $1 = ""
+      $2 = ""
+      sub(/^[[:space:]]+/, "")
+      print
+      exit
+    }
+  ' "${spec_path}"
+}
+
+resolve_spec_version() {
+  local spec_path="$1" version="$2" key value i
+  declare -A globals=()
+
+  while IFS=$'\t' read -r key value; do
+    [[ -n "${key}" ]] || continue
+    globals["${key}"]="${value}"
+  done < <(
+    awk '
+      /^(%global|%define)[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]+/ {
+        key = $2
+        $1 = ""
+        $2 = ""
+        sub(/^[[:space:]]+/, "")
+        print key "\t" $0
+      }
+    ' "${spec_path}"
+  )
+
+  for ((i = 0; i < 20; i++)); do
+    local changed=0
+    for key in "${!globals[@]}"; do
+      local needle="%{${key}}"
+      if [[ "${version}" == *"${needle}"* ]]; then
+        version="${version//${needle}/${globals[${key}]}}"
+        changed=1
+      fi
+    done
+    [[ ${changed} -eq 1 ]] || break
+  done
+
+  printf '%s\n' "${version}"
+}
+
 fetch_latest_version_from_release_page() {
   local release_url="$1" package_name="$2" html escaped_name archive_re
   [[ -n "${release_url}" ]] || return 0
@@ -157,8 +209,11 @@ for envf in "${env_files[@]}"; do
     continue
   fi
 
-  local_version="$(awk '/^Version:[[:space:]]+/{print $2; exit}' "${spec_path}")"
+  local_version_raw="$(awk '/^Version:[[:space:]]+/{print $2; exit}' "${spec_path}")"
+  local_version="$(resolve_spec_version "${spec_path}" "${local_version_raw}")"
+  local_commit="$(read_spec_global "${spec_path}" "commit")"
   upstream_tag=""
+  upstream_head=""
 
   if [[ "${upstream_git}" =~ ^https://github.com/([^/]+)/([^/.]+)(\.git)?$ ]]; then
     upstream_tag="$(fetch_github_latest_tag "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")"
@@ -174,10 +229,21 @@ for envf in "${env_files[@]}"; do
     upstream_tag="$(fetch_latest_tag_from_git "${upstream_git}" || true)"
   fi
 
+  if [[ -z "${upstream_tag}" && -n "${local_commit}" ]]; then
+    upstream_head="$(fetch_git_head "${upstream_git}" || true)"
+  fi
+
   upstream_version="$(normalize_upstream_version "${upstream_tag}")"
   local_base="${local_version%%^git*}"
 
-  if [[ -z "${upstream_tag}" ]]; then
+  if [[ -z "${upstream_tag}" && -n "${upstream_head}" && -n "${local_commit}" ]]; then
+    upstream_version="HEAD ${upstream_head:0:7}"
+    if [[ "${upstream_head}" == "${local_commit}"* ]]; then
+      status="same"
+    else
+      status="different"
+    fi
+  elif [[ -z "${upstream_tag}" ]]; then
     upstream_version="(unknown)"
     status="unknown"
   elif [[ "${local_version}" == "${upstream_version}" ]]; then
