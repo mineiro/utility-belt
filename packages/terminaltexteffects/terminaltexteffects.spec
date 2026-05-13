@@ -1,7 +1,7 @@
 %global pypi_name terminaltexteffects
 
 Name:           terminaltexteffects
-Version:        0.14.2
+Version:        0.15.0
 Release:        %autorelease
 Summary:        Terminal visual effects engine for animated text output
 

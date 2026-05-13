@@ -1,6 +1,6 @@
 # zathura-pdf-poppler
 
-RPM packaging directory for `zathura-pdf-poppler` 2026.02.03.
+RPM packaging directory for `zathura-pdf-poppler` 2026.05.10.
 
 Template: `generic`
 

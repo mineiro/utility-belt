@@ -1,5 +1,5 @@
 Name:           zathura-cb
-Version:        2026.02.03
+Version:        2026.05.10
 Release:        %autorelease
 Summary:        Comic book support for zathura
 

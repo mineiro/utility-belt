@@ -1,6 +1,6 @@
 # zathura-djvu
 
-RPM packaging directory for `zathura-djvu` 2026.02.03.
+RPM packaging directory for `zathura-djvu` 2026.05.10.
 
 Template: `generic`
 

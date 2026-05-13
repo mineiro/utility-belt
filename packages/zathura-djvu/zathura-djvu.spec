@@ -1,5 +1,5 @@
 Name:           zathura-djvu
-Version:        2026.02.03
+Version:        2026.05.10
 Release:        %autorelease
 Summary:        DjVu support for zathura
 

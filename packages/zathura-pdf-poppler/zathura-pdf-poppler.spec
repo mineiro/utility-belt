@@ -1,5 +1,5 @@
 Name:           zathura-pdf-poppler
-Version:        2026.02.03
+Version:        2026.05.10
 Release:        %autorelease
 Summary:        PDF support for zathura via poppler
 
