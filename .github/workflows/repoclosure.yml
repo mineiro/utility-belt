@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '20 9 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   repoclosure:
     name: repoclosure (${{ matrix.fedora_version }})
