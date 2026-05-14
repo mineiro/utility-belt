@@ -86,8 +86,7 @@ export npm_config_offline=true
 export npm_config_audit=false
 export npm_config_fund=false
 export npm_config_update_notifier=false
-export npm_config_legacy_peer_deps=true
-npm ci --offline --legacy-peer-deps
+npm ci --offline
 npm run tauri build -- --no-bundle
 
 %install
