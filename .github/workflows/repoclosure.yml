@@ -49,7 +49,7 @@ jobs:
             fedora_repos: |
               [fedora]
               name=Fedora 44 - $basearch
-              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/44/Everything/$basearch/os/
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/44/Everything/$basearch/os/
               enabled=1
               skip_if_unavailable=False
               gpgcheck=0
