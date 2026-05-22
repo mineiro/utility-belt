@@ -1,5 +1,5 @@
 Name:           zathura
-Version:        2026.05.11
+Version:        2026.05.20
 Release:        %autorelease -b 2
 Summary:        A lightweight document viewer
 
