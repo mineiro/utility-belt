@@ -1,5 +1,5 @@
 Name:           rapidraw
-Version:        1.5.5
+Version:        1.5.6
 Release:        %autorelease
 Summary:        GPU-accelerated RAW image editor
 
