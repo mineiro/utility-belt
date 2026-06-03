@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           tflint
-Version:        0.62.1
+Version:        0.63.0
 Release:        %autorelease
 Summary:        Pluggable Terraform linter
 
