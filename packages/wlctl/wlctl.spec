@@ -1,5 +1,5 @@
 Name:           wlctl
-Version:        0.1.8
+Version:        0.1.9
 Release:        %autorelease
 Summary:        Terminal UI for managing Wi-Fi with NetworkManager
 
