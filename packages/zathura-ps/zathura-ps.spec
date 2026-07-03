@@ -1,6 +1,6 @@
 Name:           zathura-ps
 Version:        2026.02.03
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        PostScript support for zathura via libspectre
 
 License:        Zlib
@@ -15,9 +15,9 @@ BuildRequires:  girara-devel >= 2026.02.04
 BuildRequires:  glib2-devel
 BuildRequires:  libspectre-devel
 BuildRequires:  meson >= 0.61
-BuildRequires:  zathura-devel >= 2026.01.30
+BuildRequires:  zathura-devel >= 2026.07.02
 
-Requires:       zathura >= 2026.01.30
+Requires:       zathura >= 2026.07.02
 
 %description
 The zathura-ps plugin adds PostScript support to zathura by

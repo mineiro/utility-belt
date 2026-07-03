@@ -1,6 +1,6 @@
 # zathura
 
-RPM packaging directory for `zathura` 2026.05.11.
+RPM packaging directory for `zathura` 2026.07.02.
 
 Template: `generic`
 

@@ -1,6 +1,6 @@
 Name:           zathura-pdf-poppler
 Version:        2026.05.10
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        PDF support for zathura via poppler
 
 License:        Zlib
@@ -14,9 +14,9 @@ BuildRequires:  girara-devel >= 2026.02.04
 BuildRequires:  glib2-devel
 BuildRequires:  meson >= 0.61
 BuildRequires:  poppler-glib-devel >= 21.12
-BuildRequires:  zathura-devel >= 2026.01.30
+BuildRequires:  zathura-devel >= 2026.07.02
 
-Requires:       zathura >= 2026.01.30
+Requires:       zathura >= 2026.07.02
 Conflicts:      zathura-pdf-mupdf < %{version}
 
 %description

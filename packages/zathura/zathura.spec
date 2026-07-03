@@ -1,5 +1,5 @@
 Name:           zathura
-Version:        2026.05.20
+Version:        2026.07.02
 Release:        %autorelease -b 2
 Summary:        A lightweight document viewer
 
@@ -17,7 +17,7 @@ BuildRequires:  gcc
 BuildRequires:  gettext
 BuildRequires:  girara-devel >= 2026.02.04
 BuildRequires:  glib2-devel >= 2.76
-BuildRequires:  gtk3-devel >= 3.24
+BuildRequires:  gtk4-devel >= 4.12
 BuildRequires:  intltool
 BuildRequires:  librsvg2-tools
 BuildRequires:  libseccomp-devel
@@ -25,10 +25,11 @@ BuildRequires:  meson >= 1.5
 BuildRequires:  pkgconfig(check) >= 0.11
 BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  python3-sphinx
-BuildRequires:  sqlite-devel >= 3.6.23
+BuildRequires:  sqlite-devel >= 3.35.0
 BuildRequires:  texlive-lib-devel
 BuildRequires:  weston
 BuildRequires:  xorg-x11-server-Xvfb
+BuildRequires:  xxhash-devel
 BuildRequires:  zsh
 
 Suggests:       zathura-cb
