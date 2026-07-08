@@ -1,5 +1,5 @@
 Name:           girara
-Version:        2026.02.04
+Version:        2026.07.07
 Release:        %autorelease -b 2
 Summary:        Common utility library used by zathura
 
