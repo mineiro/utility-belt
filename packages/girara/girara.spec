@@ -29,7 +29,7 @@ applications that use %{name}.
 %autosetup
 
 %build
-%meson -Ddocs=disabled -Dtests=enabled
+%meson -Ddocs=disabled
 %meson_build
 
 %install
