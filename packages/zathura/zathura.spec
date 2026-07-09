@@ -1,5 +1,5 @@
 Name:           zathura
-Version:        2026.07.02
+Version:        2026.07.08
 Release:        %autorelease -b 2
 Summary:        A lightweight document viewer
 
@@ -15,7 +15,7 @@ BuildRequires:  file-devel
 BuildRequires:  fish
 BuildRequires:  gcc
 BuildRequires:  gettext
-BuildRequires:  girara-devel >= 2026.02.04
+BuildRequires:  girara-devel >= 2026.07.07
 BuildRequires:  glib2-devel >= 2.76
 BuildRequires:  gtk4-devel >= 4.12
 BuildRequires:  intltool
@@ -111,7 +111,8 @@ This package provides zsh completion support for zathura.
     -Dmanpages=enabled \
     -Dseccomp=enabled \
     -Dsynctex=enabled \
-    -Dtests=enabled
+    -Dtests-x11=enabled \
+    -Dtests-wayland=enabled
 %meson_build
 
 %install
@@ -121,7 +122,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/org.pwmt.zathura.desk
 %find_lang org.pwmt.zathura
 
 %check
-%meson_test validate-desktop validate-appdata document types utils xvfb_session xvfb_config xvfb_setting weston_session weston_config weston_setting
+%meson_test validate-desktop validate-appdata document types utils xvfb_session xvfb_config xvfb_setting weston_session weston_config weston_setting weston_sandbox
 
 %files -f org.pwmt.zathura.lang
 %license LICENSE

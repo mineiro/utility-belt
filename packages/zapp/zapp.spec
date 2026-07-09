@@ -2,7 +2,7 @@
 %{!?_udevrulesdir:%global _udevrulesdir %{_prefix}/lib/udev/rules.d}
 
 Name:           zapp
-Version:        1.0.1
+Version:        1.0.2
 Release:        %autorelease
 Summary:        CLI tool for flashing ZSA keyboards
 
@@ -49,9 +49,6 @@ keyboards already running Oryx-built firmware.
 
 %prep
 %autosetup
-# Upstream v1.0.1 updated workspace package versions but not Cargo.lock.
-sed -i '/^name = "zapp"$/,/^dependencies = \[/ { s/^version = "1\.0\.0"$/version = "1.0.1"/ }' Cargo.lock
-sed -i '/^name = "zapp-core"$/,/^dependencies = \[/ { s/^version = "0\.1\.0"$/version = "0.1.1"/ }' Cargo.lock
 # Link against Fedora's shared hidapi instead of compiling the vendored C copy.
 sed -i 's/^hidapi = "2"$/hidapi = { version = "2", default-features = false, features = ["linux-shared-hidraw"] }/' zapp-core/Cargo.toml
 mkdir -p .cargo

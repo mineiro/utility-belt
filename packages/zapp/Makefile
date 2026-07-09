@@ -5,7 +5,7 @@ OUTDIR ?= $(CURDIR)/../../dist/srpm
 SOURCEDIR ?= $(CURDIR)/sources
 PATCHDIR ?= $(CURDIR)/patches
 
-.PHONY: srpm vendor sync-lockfile
+.PHONY: srpm vendor
 
 srpm:
 	@test -n "$(SPEC)" || { echo "No .spec file found"; exit 1; }
@@ -40,14 +40,8 @@ vendor:
 	tar -xf "$$src0_path" -C "$$tmpdir"; \
 	srcdir="$$(find "$$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -1)"; \
 	[ -n "$$srcdir" ] || { echo "Failed to locate extracted source dir for vendoring"; exit 1; }; \
-	$(MAKE) sync-lockfile SOURCE_TREE="$$srcdir"; \
 	( cd "$$srcdir" && CARGO_HOME="$$tmpdir/cargo-home" cargo vendor --locked vendor >/dev/null ); \
 	tar -cJf "$(SOURCEDIR)/$$vendor_name" -C "$$srcdir" vendor; \
 	rm -rf "$$tmpdir"; \
 	trap - EXIT; \
 	echo "Generated $(SOURCEDIR)/$$vendor_name"
-
-sync-lockfile:
-	@test -n "$(SOURCE_TREE)" || { echo "SOURCE_TREE is required"; exit 1; }
-	sed -i '/^name = "zapp"$$/,/^dependencies = \[/ { s/^version = "1\.0\.0"$$/version = "1.0.1"/ }' "$(SOURCE_TREE)/Cargo.lock"
-	sed -i '/^name = "zapp-core"$$/,/^dependencies = \[/ { s/^version = "0\.1\.0"$$/version = "0.1.1"/ }' "$(SOURCE_TREE)/Cargo.lock"
