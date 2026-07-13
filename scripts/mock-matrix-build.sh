@@ -96,7 +96,11 @@ fi
 
 declare -a packages=()
 if [[ ${all_packages} -eq 1 ]]; then
-  mapfile -t packages < <(find "${repo_root}/packages" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+  mapfile -t packages < <(
+    find "${repo_root}/packages" -mindepth 2 -maxdepth 2 -type f -name package.env -printf '%h\0' \
+      | xargs -0 -r -n1 basename \
+      | sort
+  )
 else
   packages=("${package_args[@]}")
 fi

@@ -43,6 +43,12 @@ Parse/lint specs:
 make check-specs
 ```
 
+Check packaged versions against upstream releases:
+
+```bash
+make check-updates
+```
+
 Create a new package skeleton:
 
 ```bash

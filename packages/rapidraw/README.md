@@ -1,6 +1,6 @@
 # rapidraw
 
-RPM packaging directory for `RapidRAW` 1.5.8.
+RPM packaging directory for `RapidRAW` 1.5.9.
 
 Template: `generic`
 

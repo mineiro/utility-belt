@@ -27,6 +27,9 @@ export npm_config_cache="$output_dir"
 export npm_config_audit=false
 export npm_config_fund=false
 export npm_config_update_notifier=false
+# npm 12 blocks direct tarball URLs by default. This helper intentionally
+# reads pinned URLs from package-lock.json to pre-populate an offline cache.
+export npm_config_allow_remote=all
 
 jq -r '.. | objects | .resolved? // empty' "$lockfile" \
 	| sed '/^$/d' \

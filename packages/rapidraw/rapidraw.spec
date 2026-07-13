@@ -1,5 +1,5 @@
 Name:           rapidraw
-Version:        1.5.8
+Version:        1.5.9
 Release:        %autorelease
 Summary:        GPU-accelerated RAW image editor
 
@@ -29,7 +29,7 @@ BuildRequires:  pkgconfig(libsharpyuv)
 BuildRequires:  pkgconfig(libwebp)
 BuildRequires:  pkgconfig(libwebpdemux)
 BuildRequires:  pkgconfig(libwebpmux)
-BuildRequires:  rust >= 1.94
+BuildRequires:  rust >= 1.96
 BuildRequires:  webkit2gtk4.1-devel
 
 Requires:       onnxruntime%{?_isa}

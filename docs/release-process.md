@@ -3,6 +3,7 @@
 ## Manual flow
 
 1. Check upstream versions:
+   - `make check-updates`
    - `./scripts/check-upstream-versions.sh --changed-only`
    - `./scripts/check-upstream-versions.sh --package <name>`
 2. Update package spec (`Version`, `Source`, deps, patches)

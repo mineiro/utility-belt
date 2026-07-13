@@ -6,7 +6,7 @@ Subject: [PATCH] use system onnxruntime on Fedora
 ---
 --- a/src-tauri/build.rs
 +++ b/src-tauri/build.rs
-@@ -65,6 +65,21 @@ fn main() {
+@@ -72,6 +72,21 @@ fn main() {
      let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
      let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
 
@@ -30,8 +30,8 @@ Subject: [PATCH] use system onnxruntime on Fedora
      let (download_filename, lib_name, expected_hash) =
 --- a/src-tauri/src/lib.rs
 +++ b/src-tauri/src/lib.rs
-@@ -4804,6 +4804,47 @@ fn frontend_ready(
-     Ok(())
+@@ -1943,6 +1943,47 @@ fn frontend_ready(
+     })
  }
  
 +#[cfg(target_os = "linux")]
@@ -77,8 +77,8 @@ Subject: [PATCH] use system onnxruntime on Fedora
 +
  #[cfg_attr(mobile, tauri::mobile_entry_point)]
  pub fn run() {
-     let mut builder = tauri::Builder::default();
-@@ -4918,9 +4959,25 @@ pub fn run() {
+     let _ = rayon::ThreadPoolBuilder::new()
+@@ -2068,9 +2109,25 @@ pub fn run() {
                          #[cfg(not(any(windows, target_os = "linux", target_os = "macos")))]
                          { "libonnxruntime.so" }
                      };

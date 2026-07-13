@@ -4,22 +4,34 @@ set -euo pipefail
 usage() {
   cat <<'USAGE'
 Usage:
-  scripts/check-upstream-versions.sh [--changed-only] [--package <name>]
+  scripts/check-upstream-versions.sh [--changed-only] [--fail-on-outdated] [--fail-on-unknown] [--package <name>]
 
 Options:
   --changed-only       show only rows where local != upstream
+  --fail-on-outdated   exit non-zero when an upstream version differs
+  --fail-on-unknown    exit non-zero when a version cannot be resolved
   --package <name>     check one package under packages/
   -h, --help           show this help
 USAGE
 }
 
 changed_only=0
+fail_on_outdated=0
+fail_on_unknown=0
 package_filter=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --changed-only)
       changed_only=1
+      shift
+      ;;
+    --fail-on-outdated)
+      fail_on_outdated=1
+      shift
+      ;;
+    --fail-on-unknown)
+      fail_on_unknown=1
       shift
       ;;
     --package)
@@ -180,6 +192,8 @@ normalize_upstream_version() {
 }
 
 printf '%-28s %-24s %-18s %-10s %s\n' "PACKAGE" "LOCAL" "UPSTREAM" "STATUS" "UPSTREAM_GIT"
+outdated=0
+unresolved=0
 
 for envf in "${env_files[@]}"; do
   pkg_dir="$(dirname "${envf}")"
@@ -195,7 +209,8 @@ for envf in "${env_files[@]}"; do
   fi
 
   if [[ -z "${spec_file}" || -z "${upstream_git}" ]]; then
-    if [[ ${changed_only} -eq 0 ]]; then
+    unresolved=1
+    if [[ ${changed_only} -eq 0 || ${fail_on_unknown} -eq 1 ]]; then
       printf '%-28s %-24s %-18s %-10s %s\n' "${pkg_name}" "(invalid package.env)" "(unknown)" "unknown" "${upstream_git:-N/A}"
     fi
     continue
@@ -203,7 +218,8 @@ for envf in "${env_files[@]}"; do
 
   spec_path="${pkg_dir}/${spec_file}"
   if [[ ! -f "${spec_path}" ]]; then
-    if [[ ${changed_only} -eq 0 ]]; then
+    unresolved=1
+    if [[ ${changed_only} -eq 0 || ${fail_on_unknown} -eq 1 ]]; then
       printf '%-28s %-24s %-18s %-10s %s\n' "${pkg_name}" "(missing spec)" "(unknown)" "unknown" "${upstream_git}"
     fi
     continue
@@ -254,9 +270,26 @@ for envf in "${env_files[@]}"; do
     status="different"
   fi
 
+  if [[ "${status}" == "different" ]]; then
+    outdated=1
+  elif [[ "${status}" == "unknown" ]]; then
+    unresolved=1
+  fi
+
   if [[ ${changed_only} -eq 1 && "${status}" == "same" ]]; then
     continue
   fi
 
   printf '%-28s %-24s %-18s %-10s %s\n' "${pkg_name}" "${local_version}" "${upstream_version}" "${status}" "${upstream_git}"
 done
+
+failed=0
+if [[ ${fail_on_outdated} -eq 1 && ${outdated} -eq 1 ]]; then
+  echo "One or more packages are behind upstream." >&2
+  failed=1
+fi
+if [[ ${fail_on_unknown} -eq 1 && ${unresolved} -eq 1 ]]; then
+  echo "One or more package versions could not be resolved." >&2
+  failed=1
+fi
+exit "${failed}"
