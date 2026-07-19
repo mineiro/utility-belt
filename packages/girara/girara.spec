@@ -1,5 +1,5 @@
 Name:           girara
-Version:        2026.07.07
+Version:        2026.07.18
 Release:        %autorelease -b 2
 Summary:        Common utility library used by zathura
 
@@ -9,7 +9,7 @@ Source0:        %{url}/download/%{name}-%{version}.tar.xz
 
 BuildRequires:  gcc
 BuildRequires:  gettext
-BuildRequires:  glib2-devel >= 2.72
+BuildRequires:  glib2-devel >= 2.84
 BuildRequires:  meson >= 1.5
 BuildRequires:  pkgconfig(check) >= 0.11
 

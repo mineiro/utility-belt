@@ -1,5 +1,5 @@
 Name:           zathura-cb
-Version:        2026.07.08
+Version:        2026.07.18
 Release:        %autorelease -b 2
 Summary:        Comic book support for zathura
 
@@ -11,13 +11,14 @@ BuildRequires:  appstream
 BuildRequires:  cairo-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
-BuildRequires:  girara-devel >= 2026.02.04
+BuildRequires:  girara-devel >= 2026.07.18
 BuildRequires:  glib2-devel
+BuildRequires:  gtk4-devel
 BuildRequires:  libarchive-devel
 BuildRequires:  meson >= 0.61
-BuildRequires:  zathura-devel >= 2026.07.08
+BuildRequires:  zathura-devel >= 2026.07.18
 
-Requires:       zathura >= 2026.07.08
+Requires:       zathura >= 2026.07.18
 
 %description
 The zathura-cb plugin adds comic book archive support to zathura.

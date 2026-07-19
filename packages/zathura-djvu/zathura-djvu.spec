@@ -1,5 +1,5 @@
 Name:           zathura-djvu
-Version:        2026.05.10
+Version:        2026.07.18
 Release:        %autorelease -b 2
 Summary:        DjVu support for zathura
 
@@ -12,12 +12,12 @@ BuildRequires:  cairo-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  djvulibre-devel
 BuildRequires:  gcc
-BuildRequires:  girara-devel >= 2026.02.04
+BuildRequires:  girara-devel >= 2026.07.18
 BuildRequires:  glib2-devel
 BuildRequires:  meson >= 0.61
-BuildRequires:  zathura-devel >= 2026.07.02
+BuildRequires:  zathura-devel >= 2026.07.18
 
-Requires:       zathura >= 2026.07.02
+Requires:       zathura >= 2026.07.18
 
 %description
 The zathura-djvu plugin adds DjVu support to zathura by

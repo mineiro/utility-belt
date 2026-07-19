@@ -1,5 +1,5 @@
 Name:           zathura
-Version:        2026.07.08
+Version:        2026.07.18
 Release:        %autorelease -b 2
 Summary:        A lightweight document viewer
 
@@ -15,8 +15,8 @@ BuildRequires:  file-devel
 BuildRequires:  fish
 BuildRequires:  gcc
 BuildRequires:  gettext
-BuildRequires:  girara-devel >= 2026.07.07
-BuildRequires:  glib2-devel >= 2.76
+BuildRequires:  girara-devel >= 2026.07.18
+BuildRequires:  glib2-devel >= 2.84
 BuildRequires:  gtk4-devel >= 4.12
 BuildRequires:  intltool
 BuildRequires:  librsvg2-tools
