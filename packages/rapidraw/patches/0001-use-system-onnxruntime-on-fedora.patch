@@ -30,10 +30,12 @@ Subject: [PATCH] use system onnxruntime on Fedora
      let (download_filename, lib_name, expected_hash) =
 --- a/src-tauri/src/lib.rs
 +++ b/src-tauri/src/lib.rs
-@@ -1943,6 +1943,47 @@ fn frontend_ready(
+@@ -1943,6 +1943,49 @@ fn frontend_ready(
      })
  }
  
++use std::path::PathBuf;
++
 +#[cfg(target_os = "linux")]
 +fn resolve_system_ort_library() -> Option<PathBuf> {
 +    let mut search_dirs = Vec::new();
