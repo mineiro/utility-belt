@@ -1,6 +1,6 @@
 # girara
 
-RPM packaging directory for `girara` 2026.07.07.
+RPM packaging directory for `girara` 2026.07.18.
 
 Template: `generic`
 
@@ -12,5 +12,5 @@ Upstream:
 Notes:
 
 - This is the date-based `girara` series required by current `zathura` releases.
-- `2026.07.07` keeps the same `libgirara.so.5` ABI family used by the existing
+- `2026.07.18` keeps the same `libgirara.so.5` ABI family used by the existing
   Zathura stack in this repository.
