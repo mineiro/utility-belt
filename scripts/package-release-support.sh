@@ -3,7 +3,16 @@
 package_env_value() {
   local pkg="$1" key="$2" envf="${repo_root}/packages/${pkg}/package.env"
   [[ -f "${envf}" ]] || return 0
-  awk -F= -v key="${key}" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "${envf}"
+  awk -F= -v key="${key}" '
+    $1 == key {
+      sub(/^[^=]*=/, "")
+      if (/^".*"$/ || /^\047.*\047$/) {
+        $0 = substr($0, 2, length($0) - 2)
+      }
+      print
+      exit
+    }
+  ' "${envf}"
 }
 
 package_supported_fedora_releases() {
