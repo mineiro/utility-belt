@@ -37,6 +37,12 @@ License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND BSD-2-Clause AND BSD-
 URL:            https://%{name}.io/
 Source0:        https://github.com/%{name}-player/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 
+# Backported from upstream: VapourSynth R74+ dropped the standalone VSScript
+# library, so mpv now loads it at runtime instead of linking against it.
+# Both patches are post-0.41.0 and can be dropped when 0.42.0 is packaged.
+Patch0:         0001-vf_vapoursynth-update-for-VapourSynth-R74.patch
+Patch1:         0002-meson-try-vapoursynth-script-first.patch
+
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
 BuildRequires:  libappstream-glib
@@ -135,6 +141,9 @@ a library and facilitate easy integration into other applications.
 %package libs
 Summary:        Dynamic library for Mpv frontends
 Recommends:     (yt-dlp or youtube-dl)
+# VSScript is dlopen()ed at runtime, so it is not picked up as an
+# automatic dependency; keep the VapourSynth filter working by default.
+Recommends:     vapoursynth-libs
 Suggests:       yt-dlp
 
 %description libs
