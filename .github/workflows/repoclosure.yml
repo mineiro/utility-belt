@@ -70,6 +70,33 @@ jobs:
               skip_if_unavailable=False
               gpgcheck=0
               repo_gpgcheck=0
+          - fedora_version: "45"
+            fedora_image: "45"
+            copr_releasever: "45"
+            fedora_repos: |
+              [fedora]
+              name=Fedora 45 - $basearch
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/45/Everything/$basearch/os/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates]
+              name=Fedora 45 - $basearch - Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/45/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
+
+              [updates-testing]
+              name=Fedora 45 - $basearch - Test Updates
+              baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/45/Everything/$basearch/
+              enabled=1
+              skip_if_unavailable=False
+              gpgcheck=0
+              repo_gpgcheck=0
           - fedora_version: rawhide
             fedora_image: rawhide
             copr_releasever: rawhide

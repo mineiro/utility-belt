@@ -12,7 +12,7 @@
      intentionally skipped.
 3. Build SRPM:
    - `make srpm PACKAGE=<name>`
-4. Validate with `mock` (at least Fedora 43/44 x86_64)
+4. Validate with `mock` (at least Fedora 44/45 x86_64)
 5. Commit and push
 6. Trigger COPR build
 7. Run repoclosure and install smoke checks

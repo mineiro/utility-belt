@@ -8,9 +8,11 @@ This repo is designed for COPR `SCM` package entries (one entry per package dire
 - Chroots:
   - `fedora-43-x86_64`
   - `fedora-44-x86_64`
+  - `fedora-45-x86_64`
   - `fedora-rawhide-x86_64`
   - `fedora-43-aarch64`
   - `fedora-44-aarch64`
+  - `fedora-45-aarch64`
   - `fedora-rawhide-aarch64`
 
 ## Add a package from this monorepo
@@ -30,7 +32,7 @@ Package-specific release limits can be declared in `package.env`:
 
 ```bash
 SUPPORTED_FEDORA_RELEASES=rawhide
-SUPPORTED_FEDORA_RELEASES="44 rawhide"
+SUPPORTED_FEDORA_RELEASES="45 rawhide"
 ```
 
 An empty value means all configured Fedora releases. The helper scripts filter
@@ -53,5 +55,5 @@ copr-cli build-package <owner>/<project> --name <pkg>
 
 # aarch64-only rollout
 copr-cli build-package <owner>/<project> --name <pkg> \
-  -r fedora-43-aarch64 -r fedora-44-aarch64 -r fedora-rawhide-aarch64
+  -r fedora-43-aarch64 -r fedora-44-aarch64 -r fedora-45-aarch64 -r fedora-rawhide-aarch64
 ```
