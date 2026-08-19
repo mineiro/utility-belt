@@ -16,7 +16,7 @@ jobs:
     container:
       image: registry.fedoraproject.org/fedora:44
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install tooling
         run: |
