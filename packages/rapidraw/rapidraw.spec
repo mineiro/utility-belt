@@ -1,5 +1,5 @@
 Name:           rapidraw
-Version:        1.6.1
+Version:        1.6.2
 Release:        %autorelease
 Summary:        GPU-accelerated RAW image editor
 
@@ -51,6 +51,10 @@ replace-with = "vendored-sources"
 
 [source."git+https://github.com/CyberTimon/RapidRAW-DngLab.git"]
 git = "https://github.com/CyberTimon/RapidRAW-DngLab.git"
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/CyberTimon/libgphoto2-rs"]
+git = "https://github.com/CyberTimon/libgphoto2-rs"
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
