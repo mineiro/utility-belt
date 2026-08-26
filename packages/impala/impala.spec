@@ -1,5 +1,5 @@
 Name:           impala
-Version:        0.7.4
+Version:        0.8.1
 Release:        %autorelease
 Summary:        Terminal UI for managing Wi-Fi with the Intel Wireless Daemon
 
@@ -18,14 +18,14 @@ Requires:       iwd
 # Vendored Rust crates are used to keep SRPM and COPR builds reproducible while
 # the dependency stack is not yet packaged in Fedora.
 Provides:       bundled(crate(iwdrs)) = 0.2.6
-Provides:       bundled(crate(zbus)) = 5.13.2
-Provides:       bundled(crate(chrono)) = 0.4.43
-Provides:       bundled(crate(env_logger)) = 0.11.9
+Provides:       bundled(crate(zbus)) = 5.19.0
+Provides:       bundled(crate(chrono)) = 0.4.45
+Provides:       bundled(crate(env_logger)) = 0.11.11
 Provides:       bundled(crate(qrcode)) = 0.14.1
-Provides:       bundled(crate(tui-qrcode)) = 0.2.2
-Provides:       bundled(crate(ratatui)) = 0.30.0
-Provides:       bundled(crate(tokio)) = 1.49.0
-Provides:       bundled(crate(clap)) = 4.5.58
+Provides:       bundled(crate(tui-qrcode)) = 0.2.6
+Provides:       bundled(crate(ratatui)) = 0.30.2
+Provides:       bundled(crate(tokio)) = 1.53.1
+Provides:       bundled(crate(clap)) = 4.6.6
 Provides:       bundled(crate(crossterm)) = 0.29.0
 
 %description
