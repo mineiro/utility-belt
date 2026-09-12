@@ -1,6 +1,7 @@
 Name:           mpv
 Version:        0.41.0
-Release:        %autorelease -b 2
+# Advance the release so the FFmpeg 9 rebuild upgrades existing installations.
+Release:        %autorelease -b 3
 Summary:        Movie player playing most video formats and DVDs
 
 # Disable X11 for RHEL 10+, matching Fedora's current dist-git behavior.
