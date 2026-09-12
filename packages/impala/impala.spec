@@ -1,5 +1,5 @@
 Name:           impala
-Version:        0.8.1
+Version:        0.9.0
 Release:        %autorelease
 Summary:        Terminal UI for managing Wi-Fi with the Intel Wireless Daemon
 
@@ -26,6 +26,7 @@ Provides:       bundled(crate(tui-qrcode)) = 0.2.6
 Provides:       bundled(crate(ratatui)) = 0.30.2
 Provides:       bundled(crate(tokio)) = 1.53.1
 Provides:       bundled(crate(clap)) = 4.6.6
+Provides:       bundled(crate(crossterm)) = 0.28.1
 Provides:       bundled(crate(crossterm)) = 0.29.0
 
 %description
