@@ -142,7 +142,7 @@ jobs:
 
       - name: Repoclosure
         run: |
-          dnf -y install dnf-plugins-core
+          dnf -y install dnf5-plugins
           dnf repoclosure --check "copr:${COPR_OWNER}:${COPR_PROJECT}" --newest --best
 
   report:
@@ -152,6 +152,7 @@ jobs:
     permissions:
       actions: read
       checks: read
+      contents: read
       issues: write
     env:
       GH_TOKEN: ${{ github.token }}
