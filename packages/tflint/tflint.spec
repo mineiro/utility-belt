@@ -2,7 +2,7 @@
 
 Name:           tflint
 Version:        0.64.0
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Pluggable Terraform linter
 
 License:        MPL-2.0 AND BUSL-1.1 AND BSD-3-Clause
@@ -46,4 +46,5 @@ install -Dpm0755 tflint-bin %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 0.64.0-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

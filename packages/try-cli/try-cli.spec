@@ -1,6 +1,6 @@
 Name:           try-cli
 Version:        1.5.3
-Release:        %autorelease -b 2
+Release:        2%{?dist}
 Summary:        Ephemeral workspace manager with fuzzy directory search
 
 License:        MIT
@@ -37,4 +37,5 @@ install -Dpm0755 dist/try %{buildroot}%{_bindir}/try
 %{_bindir}/try
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 1.5.3-2
+- Use an explicit Release (autorelease never advanced in COPR builds)

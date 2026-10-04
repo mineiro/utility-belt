@@ -1,6 +1,6 @@
 Name:           zathura-ps
 Version:        2026.07.18
-Release:        %autorelease -b 2
+Release:        2%{?dist}
 Summary:        PostScript support for zathura via libspectre
 
 License:        Zlib
@@ -43,4 +43,5 @@ appstreamcli validate --no-net %{buildroot}%{_datadir}/metainfo/org.pwmt.zathura
 %{_datadir}/metainfo/org.pwmt.zathura-ps.metainfo.xml
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 2026.07.18-2
+- Use an explicit Release (autorelease never advanced in COPR builds)

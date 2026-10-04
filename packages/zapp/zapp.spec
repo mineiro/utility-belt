@@ -3,7 +3,7 @@
 
 Name:           zapp
 Version:        1.0.2
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        CLI tool for flashing ZSA keyboards
 
 # Upstream licenses Zapp as MIT with the Commons Clause restriction.
@@ -84,4 +84,5 @@ grep -q 'ATTR{idVendor}=="16c0", ATTR{idProduct}=="0478"' udev/50-zsa.rules
 %{_udevrulesdir}/50-zsa.rules
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 1.0.2-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

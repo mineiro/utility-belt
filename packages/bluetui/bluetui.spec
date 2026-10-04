@@ -2,7 +2,7 @@
 
 Name:           bluetui
 Version:        0.8.1
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Terminal UI for managing Bluetooth on Linux
 
 License:        GPL-3.0-only
@@ -65,4 +65,5 @@ install -Dpm0755 target/release/%{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 0.8.1-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

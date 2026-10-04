@@ -2,7 +2,7 @@
 
 Name:           pkgname
 Version:        0.0.0
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        TODO summary
 
 License:        TODO
@@ -34,4 +34,5 @@ install -Dpm0755 %{name} %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-%autochangelog
+* DATE PACKAGER - VERSION-1
+- Initial package

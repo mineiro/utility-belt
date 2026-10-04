@@ -13,10 +13,10 @@ Notes:
 
 - Follows Fedora's current package split: `mpv`, `mpv-libs`, and `mpv-devel`.
 - Spec is based on Fedora rawhide's `0.41.0` packaging, adapted to this repo's
-  `%autorelease` and `%autochangelog` conventions.
-- Release base 3 makes the rawhide FFmpeg 9 rebuild newer than the previously
+  explicit `Release` and `%changelog` conventions.
+- Release 3 makes the rawhide FFmpeg 9 rebuild newer than the previously
   published release 2, so existing installations receive it as an upgrade.
-- Release base 4 rebuilds every chroot after FFmpeg 9 reached Fedora 45; the
+- Release 4 rebuilds every chroot after FFmpeg 9 reached Fedora 45; the
   release-3 Fedora 45 build had been linked against FFmpeg 8 and became
   uninstallable. The base is the effective release, so raise it again for any
   later same-version rebuild.

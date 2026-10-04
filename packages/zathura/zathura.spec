@@ -1,6 +1,6 @@
 Name:           zathura
 Version:        2026.07.18
-Release:        %autorelease -b 2
+Release:        2%{?dist}
 Summary:        A lightweight document viewer
 
 License:        Zlib
@@ -154,4 +154,5 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/org.pwmt.zathura.desk
 %{_datadir}/zsh/site-functions/_zathura
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 2026.07.18-2
+- Use an explicit Release (autorelease never advanced in COPR builds)

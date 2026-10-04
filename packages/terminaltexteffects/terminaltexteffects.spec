@@ -2,7 +2,7 @@
 
 Name:           terminaltexteffects
 Version:        0.15.0
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Terminal visual effects engine for animated text output
 
 License:        MIT
@@ -51,4 +51,5 @@ terminaltexteffects --version | grep -q "TerminalTextEffects %{version}"
 %{_bindir}/terminaltexteffects
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 0.15.0-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

@@ -5,7 +5,7 @@
 
 Name:           voxcii-git
 Version:        %{snapshot_date}git%{shortcommit}
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Terminal-based ASCII 3D model viewer
 
 License:        MIT
@@ -59,4 +59,5 @@ grep -q "^Usage:" usage.txt
 %{_datadir}/%{upstream_name}/models/*
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 20260306gitc7ff4ee-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

@@ -1,6 +1,6 @@
 Name:           wlctl
 Version:        0.1.10
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Terminal UI for managing Wi-Fi with NetworkManager
 
 License:        GPL-3.0-only
@@ -81,4 +81,5 @@ install -Dpm0644 %{name}.1 %{buildroot}%{_mandir}/man1/%{name}.1
 %{_mandir}/man1/%{name}.1*
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 0.1.10-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

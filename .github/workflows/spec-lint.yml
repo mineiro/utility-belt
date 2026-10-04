@@ -26,3 +26,23 @@ jobs:
       - name: Parse and lint specs
         run: |
           ./scripts/check-specs.sh
+
+  nvr:
+    name: rebuilds get a new version-release
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: the check compares against the merge base.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Package changes carry a Version or Release bump
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # A new branch or manual run has no usable "before" commit.
+          if [ -z "${BASE_SHA}" ] || [ "${BASE_SHA}" = 0000000000000000000000000000000000000000 ]; then
+            BASE_SHA=HEAD~1
+          fi
+          ./scripts/check-nvr.sh "${BASE_SHA}"

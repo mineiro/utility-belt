@@ -92,6 +92,24 @@ if [[ ${explicit_chroots} -eq 0 ]]; then
   )
 fi
 
+# Refuse to republish a version-release COPR already published: DNF compares
+# NEVRA, so systems that installed it would never receive the rebuild.
+published_vr() {
+  curl -fsSL "https://copr.fedorainfracloud.org/api_3/build/list?ownername=${project%%/*}&projectname=${project#*/}&packagename=$1&status=succeeded&limit=1" |
+    jq -r '.items[0].source_package.version // empty'
+}
+for pkg in "${packages[@]}"; do
+  spec="${repo_root}/packages/${pkg}/${pkg}.spec"
+  [[ -f "${spec}" ]] || continue
+  local_vr="$(rpmspec -q --srpm --undefine dist --qf '%{version}-%{release}' "${spec}")"
+  remote_vr="$(published_vr "${pkg}")"
+  [[ -n "${remote_vr}" ]] || continue
+  if [[ "$(rpm --eval "%{lua: print(rpm.vercmp('${local_vr}', '${remote_vr}'))}")" != 1 ]]; then
+    echo "${pkg}: ${local_vr} is not newer than published ${remote_vr}; run scripts/bump-release.sh ${pkg} \"<reason>\" first" >&2
+    exit 1
+  fi
+done
+
 prev="${after_build_id}"
 submitted=0
 for pkg in "${packages[@]}"; do

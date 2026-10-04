@@ -1,6 +1,6 @@
 Name:           girara
 Version:        2026.07.18
-Release:        %autorelease -b 2
+Release:        2%{?dist}
 Summary:        Common utility library used by zathura
 
 License:        Zlib
@@ -50,4 +50,5 @@ applications that use %{name}.
 %{_libdir}/lib%{name}.so
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 2026.07.18-2
+- Use an explicit Release (autorelease never advanced in COPR builds)

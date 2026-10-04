@@ -14,7 +14,7 @@ infrastructure tooling.
 - One package per `packages/<name>/` directory
 - Prefer stable release specs first, `-git` variants later
 - Keep package-specific patches in `patches/`
-- Use `%autorelease` + `%autochangelog` for new specs
+- Use explicit `Release: N%{?dist}` + `%changelog`; bump with `scripts/bump-version.sh` or `scripts/bump-release.sh` (see `docs/packaging-policy.md`)
 - Validate via `make check-specs` before pushes
 - Validate SRPM + mock before COPR webhooks/auto-rebuild
 

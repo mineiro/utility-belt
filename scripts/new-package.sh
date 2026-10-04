@@ -68,7 +68,11 @@ sed -i \
   -e "s|^COPR_SUBDIR=.*|COPR_SUBDIR=packages/${pkg}|" \
   "${pkg_dir}/package.env"
 
-sed -i -e "s/^Name:.*/Name:           ${pkg}/" "${pkg_dir}/${pkg}.spec"
+packager="$(git -C "${repo_root}" config user.name) <$(git -C "${repo_root}" config user.email)>"
+sed -i \
+  -e "s/^Name:.*/Name:           ${pkg}/" \
+  -e "s|^\\* DATE PACKAGER - VERSION-1$|* $(LC_ALL=C date '+%a %b %d %Y') ${packager} - 0-1|" \
+  "${pkg_dir}/${pkg}.spec"
 
 cat > "${pkg_dir}/README.md" <<NOTE
 # ${pkg}

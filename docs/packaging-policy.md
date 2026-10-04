@@ -9,7 +9,14 @@ This repo is packaging infrastructure, not an upstream source mirror.
 3. Prefer stable release packages first; add `-git` variants only when needed.
 4. Avoid vendoring unless Fedora packaging/build constraints require it.
 5. If vendoring is required, document rationale in spec and declare `Provides: bundled(<name>)` where applicable.
-6. Use `Release: %autorelease` and `%autochangelog` unless there is a strong reason not to.
+6. Use an explicit `Release: N%{?dist}` and a maintained `%changelog`. COPR's
+   `make_srpm` path does not process `%autorelease`, so it never advanced and
+   `%autochangelog` shipped a placeholder entry. Every build-relevant change
+   to a package needs a new Version or Release: `scripts/bump-version.sh`
+   resets Release to 1, `scripts/bump-release.sh <pkg> "<reason>"` raises it
+   for same-version rebuilds, and both add the changelog entry. CI
+   (`scripts/check-nvr.sh`) and `scripts/copr-chain-build.sh` refuse changes
+   or submissions that would reuse a published version-release.
 7. Use Fedora conditionals only when necessary and document why.
 8. Validate with `rpmbuild` and `mock` before enabling COPR auto-rebuilds.
 

@@ -1,6 +1,6 @@
 Name:           rapidraw
 Version:        1.6.3
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        GPU-accelerated RAW image editor
 
 License:        AGPL-3.0-only
@@ -138,4 +138,5 @@ test -x src-tauri/target/release/RapidRAW
 %{_metainfodir}/io.github.CyberTimon.RapidRAW.metainfo.xml
 
 %changelog
-%autochangelog
+* Sun Oct 04 2026 Jose Tiburcio Ribeiro Netto <jnetto@mineiro.io> - 1.6.3-1
+- Use an explicit Release (autorelease never advanced in COPR builds)

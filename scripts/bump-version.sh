@@ -33,6 +33,9 @@ old_version="$(awk '/^Version:[[:space:]]+/ {print $2; exit}' "${spec}")"
 [[ -n "${old_version}" ]] || { echo "Could not read Version from ${spec}"; exit 1; }
 
 sed -i -E "0,/^Version:[[:space:]]+/{s|^Version:[[:space:]]+.*$|Version:        ${new_version}|}" "${spec}"
+# A new version starts the release count over.
+sed -i -E "0,/^Release:[[:space:]]+/{s|^Release:[[:space:]]+.*$|Release:        1%{?dist}|}" "${spec}"
+"${repo_root}/scripts/add-changelog-entry.sh" "${spec}" "Update to ${new_version}"
 
-echo "Updated ${spec#${repo_root}/}: ${old_version} -> ${new_version}"
+echo "Updated ${spec#"${repo_root}"/}: ${old_version} -> ${new_version} (Release 1)"
 echo "Reminder: verify Source URLs, patches, and dependency floors before build."
