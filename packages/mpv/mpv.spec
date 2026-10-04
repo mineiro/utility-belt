@@ -1,7 +1,9 @@
 Name:           mpv
 Version:        0.41.0
-# Advance the release so the FFmpeg 9 rebuild upgrades existing installations.
-Release:        %autorelease -b 3
+# autorelease does not count commits in this repo's COPR SRPM path, so the
+# base is the effective release. Raise it for every same-version rebuild:
+# base 4 relinks Fedora 45 against FFmpeg 9 (libavcodec.so.63).
+Release:        %autorelease -b 4
 Summary:        Movie player playing most video formats and DVDs
 
 # Disable X11 for RHEL 10+, matching Fedora's current dist-git behavior.
