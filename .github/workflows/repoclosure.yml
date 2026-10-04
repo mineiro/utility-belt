@@ -144,3 +144,26 @@ jobs:
         run: |
           dnf -y install dnf-plugins-core
           dnf repoclosure --check "copr:${COPR_OWNER}:${COPR_PROJECT}" --newest --best
+
+  report:
+    needs: repoclosure
+    if: ${{ always() && needs.repoclosure.result != 'cancelled' && needs.repoclosure.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      checks: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Open, update, or close the tracking issue
+        env:
+          RESULT: ${{ needs.repoclosure.result }}
+        run: |
+          if [ "$RESULT" = success ]; then
+            ./scripts/ci-issue.sh alert ci-repoclosure "Repoclosure is failing" passing
+          else
+            ./scripts/ci-issue.sh run-summary > "${RUNNER_TEMP}/body.md"
+            ./scripts/ci-issue.sh alert ci-repoclosure "Repoclosure is failing" failing "${RUNNER_TEMP}/body.md"
+          fi
